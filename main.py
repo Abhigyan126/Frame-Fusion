@@ -8,7 +8,7 @@ import threading
 class VideoStitcherApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Video Stitcher")
+        self.root.title("Frame-Fusion")
         self.root.geometry("800x600")
         self.root.configure(bg="#1e1e1e")
 
@@ -64,7 +64,7 @@ class VideoStitcherApp:
         # Save Panorama Button
         save_btn = tk.Button(controls_frame, text="Save Panorama", command=self.save_panorama, bg="#404040", fg="white")
         save_btn.pack(side=tk.RIGHT, padx=(0, 10))
-
+   
     def upload_video(self):
         self.video_path.set(filedialog.askopenfilename(filetypes=[("MP4 files", "*.mp4")]))
 
@@ -94,17 +94,20 @@ class VideoStitcherApp:
     def start_video_playback(self):
         self.is_playing = True
         while self.is_playing:
-            ret, frame = self.video_capture.read()
-            if ret:
+            while True:
+                ret, frame = self.video_capture.read()
+                if not ret:
+                    self.video_capture.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                    continue
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 frame = Image.fromarray(frame)
                 frame.thumbnail((400, 300))
                 video_frame = ImageTk.PhotoImage(frame)
                 self.video_canvas.create_image(0, 0, anchor=tk.NW, image=video_frame)
                 self.video_canvas.image = video_frame
-            else:
-                break
-        self.is_playing = False
+                self.root.update() 
+                break  
+
 
     def stop_video_playback(self):
         self.is_playing = False

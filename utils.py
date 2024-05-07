@@ -1,5 +1,5 @@
+import os
 import cv2
-from PIL import Image, ImageTk
 
 class VideoStitcherOpenCV:
     def process_video(self, video_path, limit_frames, skip_frames):
@@ -21,7 +21,6 @@ class VideoStitcherOpenCV:
             imgs.append(frame)
             frame_count += 1
 
-     
             if len(imgs) >= limit_frames:
                 break
 
@@ -37,6 +36,6 @@ class VideoStitcherOpenCV:
             if status != cv2.Stitcher_OK:
                 print("Stitching isn't successful")
             else:
-                output_file_path = 'stitched_panorama.jpg'
+                output_file_path = "fold/img.png"  
                 cv2.imwrite(output_file_path, output)
                 print(f'Stitched panorama saved as {output_file_path}')
